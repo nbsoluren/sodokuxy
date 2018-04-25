@@ -5,7 +5,7 @@ https://goo.gl/W5kXqy
 
 Milestones
 
-Milestone 1 (First week)
+Milestone 1 (First week) /n
 Must be coded using C.
 Can look for all regular Sudoku solutions.
 Can output the correct number of possible solutions.
