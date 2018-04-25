@@ -1,7 +1,7 @@
 # sodokuxy
 
-**Project Specifications**
-* https://goo.gl/W5kXqy
+## Project Specifications**
+https://goo.gl/EwG1Be
 
 ## Milestones
 
