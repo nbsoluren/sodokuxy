@@ -1,6 +1,6 @@
 # sodokuxy
 
-**Project Specifications **
+**Project Specifications**
 https://goo.gl/W5kXqy
 
 **Milestones **
