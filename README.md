@@ -1,9 +1,9 @@
 # sodokuxy
 
 **Project Specifications**
-https://goo.gl/W5kXqy
+* https://goo.gl/W5kXqy
 
-**Milestones **
+## Milestones
 
 **Milestone 1 (First week)** 
 * Must be coded using C.
