@@ -1,18 +1,18 @@
 # sodokuxy
 
-# Project Specifications
+Project Specifications
 https://goo.gl/W5kXqy
 
-# Milestones
+Milestones
 
 Milestone 1 (First week)
--Must be coded using C.
--Can look for all regular Sudoku solutions.
--Can output the correct number of possible solutions.
+Must be coded using C.
+Can look for all regular Sudoku solutions.
+Can output the correct number of possible solutions.
 
 Milestone 2 (Second week)
-May be coded using any programming language at your disposal.
-All requirements from milestone 1.
+-May be coded using any programming language at your disposal.
+-All requirements from milestone 1.
 -Can look for all Sudoku X solutions.
 -Can look for all Sudoku Y solutions.
 -Can look for all Sudoku XY solutions.
