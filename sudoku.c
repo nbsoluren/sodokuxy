@@ -20,10 +20,18 @@ void printMatrix(int **matrix, int row, int col){
 
 	for(i=0; i<row; i++){
 		for(j=0; j<col; j++){
-			printf("%d ", *(*(matrix+i)+j));
+			printf("%2d ", *(*(matrix+i)+j));
 		}
 		printf("\n");
 	}
+}
+
+// Frees dynamically allocated matrix/board
+void destroy(int **board, int board_size){
+  for(int i=0; i<board_size; i++){
+    int *currentIntPtr = board[i];
+    free(currentIntPtr);
+  }
 }
 
 int main(){
@@ -53,15 +61,10 @@ int main(){
 
     // Print the board
     printMatrix(board, board_size, board_size);
+    // Free the board
+    destroy(board, board_size);
     num_of_boards--;
   }
-
-  // Frees dynamically allocated matrix/board
-  for(i= 0; i<board_size*board_size; i++){
-    int  *currentIntPtr = board[i];
-    free(currentIntPtr);
-	}
-
 
   return 0;
 }
