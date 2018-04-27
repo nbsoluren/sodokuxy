@@ -1,5 +1,6 @@
 // A Backtracking program  in C++ to solve Sudoku problem
 #include <stdio.h>
+#include <stdbool.h>
 
 // UNASSIGNED is used for empty cells in sudoku grid
 #define UNASSIGNED 0
@@ -8,7 +9,7 @@
 #define N 9
 
 // This function finds an entry in grid that is still unassigned
-bool FindUnassignedLocation(int grid[N][N], int &row, int &col);
+bool FindUnassignedLocation (int grid[N][N], int row, int col);
 
 // Checks whether it will be legal to assign num to the given row,col
 bool isSafe(int grid[N][N], int row, int col, int num);
@@ -48,7 +49,7 @@ bool SolveSudoku(int grid[N][N])
    found, the reference parameters row, col will be set the location
    that is unassigned, and true is returned. If no unassigned entries
    remain, false is returned. */
-bool FindUnassignedLocation(int grid[N][N], int &row, int &col)
+bool FindUnassignedLocation(int grid[N][N], int row, int col)
 {
     for (row = 0; row < N; row++)
         for (col = 0; col < N; col++)
@@ -111,8 +112,7 @@ void printGrid(int grid[N][N])
 }
 
 /* Driver Program to test above functions */
-int main()
-{
+int main(){   
     // 0 means unassigned cells
     int grid[N][N] = {{3, 0, 6, 5, 0, 8, 4, 0, 0},
                       {5, 2, 0, 0, 0, 0, 0, 0, 0},
@@ -123,6 +123,7 @@ int main()
                       {1, 3, 0, 0, 0, 0, 2, 5, 0},
                       {0, 0, 0, 0, 0, 0, 0, 7, 4},
                       {0, 0, 5, 2, 0, 6, 3, 0, 0}};
+   
     if (SolveSudoku(grid) == true)
           printGrid(grid);
     else
