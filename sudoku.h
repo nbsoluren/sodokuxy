@@ -19,4 +19,49 @@ void destroy(int **board, int board_size){
   }
 }
 
+// Check if number is already used in the row
+bool usedInRow(int **board, int board_size, int row, int num){
+	int col;
+	for(col=0; col<board_size; col++){ //For-loop that traverses through the rows
+		if(board[row][col] == num) return true; // Return true if number is found
+	}
+	return false;
+}
+
+// Check if number is already used in the column
+bool usedInCol(int **board, int board_size, int col, int num){
+	int row;
+	for(row=0; row<board_size; row++){ //For-loop that traverses through the columns
+		if(board[row][col] == num) return true; // Return true if number is found
+	}
+	return false;
+}
+
+// Check if number is already used in the grid
+bool usedInBox(int **board, int subgrid_size, int boxStartRow, int boxStartCol, int num){
+	int row, col;
+	for(row=0; row<subgrid_size; row++){ // Traverse through the grid
+		for(col=0; col<subgrid_size; col++){
+			if(board[row+boxStartRow][col+boxStartCol] == num)
+				return true; // Return true if number is found
+		}
+	}
+	return false;
+}
+
+bool isSafe(int **board, int board_size, int subgrid_size, int row, int col, int num){
+	return !usedInRow(board, board_size, row, num) &&
+				 !usedInCol(board, board_size, col, num) &&
+				 !usedInBox(board, subgrid_size, row-row%subgrid_size, col-col%subgrid_size, num);
+}
+
+// Pop Function
+int pop(int stack[], int stack_size){
+	int i, val = stack[0]; // Get TOS
+	for(i=1; i<stack_size-1; i++){ // Move elements of the stack to the left
+		stack[i-1] = stack[i];
+	}
+	return val;
+}
+
 // ---------------------------------------------------------------------------------- //

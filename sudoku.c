@@ -76,6 +76,7 @@ int main(){
             stacks[i] = (int *) malloc(stack_col * (sizeof(int)));
 
         
+        
         printBoard(board, board_size); // Print the board
         destroy(board, board_size); // Free the board
         num_of_boards--; // Decrementor
