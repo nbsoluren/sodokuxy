@@ -39,7 +39,8 @@ int main(){
     int i, j; // Iterators 
     int num_of_boards; // Number of iteration for test case
     int subgrid_size, board_size, **board; // Variables for the board
-    int stack_row, stack_col, **stacks; // Variables for the stacks
+    int stack_row, stack_col; // Variables for the stacks
+    NODE **stacks;
     // ------------------------------------------------------------------------------ //
 
 
@@ -69,14 +70,36 @@ int main(){
                 COLUMN == max number of options or board size
             The Top Of Stack (TOS) is the first element of each row in the array.
         */
+        
+        stack_row = findBlank(board, board_size);
+        stack_col = board_size;
 
         // Dynamically allocate the stacks
-        stacks = (int **) malloc(stack_row * sizeof(int *));
+        stacks = (NODE **) malloc(stack_row * sizeof(NODE *));
         for(i=0; i<stack_col; i++)
-            stacks[i] = (int *) malloc(stack_col * (sizeof(int)));
+            stacks[i] = (NODE *) malloc(stack_col * (sizeof(NODE)));
+    
+        int stack_r=0, stack_c=0;
 
-        
-        
+        for(i=0; i<board_size; i++){
+            for(j=0; j<board_size; j++){
+                if(board[i][j] == 0){
+                    for(int num=1; num<board_size+1; num++){
+                        if(isSafe(board, board_size, subgrid_size, i, j, num)){
+                            push(stacks[stack_r], stack_c, num);
+                            stack_c++;
+                        }
+                    }
+                    stack_r++;
+                }
+            }
+        }
+
+        printMatrix(stacks, stack_row, stack_col);
+        // while((stacks[0][0]).val){
+
+        // }
+
         printBoard(board, board_size); // Print the board
         destroy(board, board_size); // Free the board
         num_of_boards--; // Decrementor
