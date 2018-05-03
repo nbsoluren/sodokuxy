@@ -18,12 +18,14 @@ typedef struct node{
 
 // Function that prints a Matrix
 void printBoard(int **board, int size){
+	printf("---------------------------\n");
 	for(int i=0; i<size; i++){
 		for(int j=0; j<size; j++){
 			printf("%2d ", *(*(board+i)+j));
 		}
 		printf("\n");
 	}
+	printf("---------------------------\n");
 }
 
 // Frees dynamically allocated board
@@ -85,15 +87,16 @@ int findBlank(int **board, int board_size){
 
 // Pop Function
 void pop(NODE stack[], int stack_size){
-	int i, val = stack[0].val; // Get TOS
+	int i;
+	NODE val = stack[0]; // Get TOS
 	for(i=1; i<stack_size-1; i++){ // Move elements of the stack to the left
 		stack[i-1] = stack[i];
 	}
 }
 
 // Push Function
-void push(NODE stack[], int index, int num){
-	stack[index].val = num;
+void push(NODE **stacks, int row, int col, NODE newnode){
+	stacks[row][col] = newnode;
 }
 
 void fillUp(){

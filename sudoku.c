@@ -39,14 +39,14 @@ int main(){
     int i, j; // Iterators 
     int num_of_boards; // Number of iteration for test case
     int subgrid_size, board_size, **board; // Variables for the board
-    int stack_row, stack_col; // Variables for the stacks
+    int stack_row_size, stack_col_size; // Variables for the stacks
     NODE **stacks;
     // ------------------------------------------------------------------------------ //
 
 
     // ------------------------------------------------------------------------------ //
     // ACCESSING INPUT FILE
-    fp = fopen("milestone1.in", "r"); // File open
+    fp = fopen("test.in", "r"); // File open
     fscanf(fp, "%d\n", &num_of_boards); // Scans number of boards
 
     while(num_of_boards > 0){ // Loop until all boards are solved
@@ -71,31 +71,40 @@ int main(){
             The Top Of Stack (TOS) is the first element of each row in the array.
         */
         
-        stack_row = findBlank(board, board_size);
-        stack_col = board_size;
+        stack_row_size = findBlank(board, board_size);
+        stack_col_size = board_size;
 
         // Dynamically allocate the stacks
-        stacks = (NODE **) malloc(stack_row * sizeof(NODE *));
-        for(i=0; i<stack_col; i++)
-            stacks[i] = (NODE *) malloc(stack_col * (sizeof(NODE)));
-    
-        int stack_r=0, stack_c=0;
+        stacks = (NODE **) malloc(stack_row_size * sizeof(NODE *));
+        for(i=0; i<stack_col_size; i++)
+            stacks[i] = (NODE *) malloc(stack_col_size * (sizeof(NODE)));
+
+        int stack_row=0, stack_col=0;
 
         for(i=0; i<board_size; i++){
             for(j=0; j<board_size; j++){
                 if(board[i][j] == 0){
                     for(int num=1; num<board_size+1; num++){
                         if(isSafe(board, board_size, subgrid_size, i, j, num)){
-                            push(stacks[stack_r], stack_c, num);
-                            stack_c++;
+                            printf("SAFE: %d %d %d\n", i, j, num);
+
+                            stacks[stack_row][stack_col].val = num;
+                            stacks[stack_row][stack_col].row = i;
+                            stacks[stack_row][stack_col].col = j;
+
+                            if(board[i][j] == 0) board[i][j] = num;
+                            
+                            printBoard(board, board_size); // Print the board   
+                            
+                            stack_col++;
                         }
                     }
-                    stack_r++;
                 }
             }
+                    stack_row++;
         }
 
-        printMatrix(stacks, stack_row, stack_col);
+        // printMatrix(stacks, stack_row_size, stack_col_size);
         // while((stacks[0][0]).val){
 
         // }
