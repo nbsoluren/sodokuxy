@@ -9,6 +9,7 @@ typedef struct node{
     int row;
     int col;
     int val;
+	struct node *next;
 }NODE;
 // ---------------------------------------------------------------------------------- //
 
@@ -86,20 +87,40 @@ int findBlank(int **board, int board_size){
 }
 
 // Pop Function
-void pop(NODE stack[], int stack_size){
-	int i;
-	NODE val = stack[0]; // Get TOS
-	for(i=1; i<stack_size-1; i++){ // Move elements of the stack to the left
-		stack[i-1] = stack[i];
+void pop(NODE **head){
+	if(*head!=NULL){//Checks if the list is not empty
+		NODE *toDelete = *head; //Declares a pointer that points to the head
+		*head = (*head)->next; //Points the head to the next node
+		free(toDelete); //Deletes the node
 	}
 }
 
 // Push Function
-void push(NODE **stacks, int row, int col, NODE newnode){
-	stacks[row][col] = newnode;
-}
+void push(NODE **head, int row, int col, int num){
+	// Variable Declaration
+	NODE *viewer = *head;
+	
+	if(*head == NULL){ //Checks if the list is empty
+		*head = (NODE *) malloc(sizeof(NODE));
+		(*head)->row = row;
+		(*head)->col = col;
+		(*head)->val = num;
 
-void fillUp(){
+		//Points the pointer to NULL to avoid dangling
+		(*head)->next = NULL;
+	}else{
+		//Traverses the linked list to find the tail
+		while(viewer->next!=NULL) viewer=viewer->next;
+		NODE *newnode = (NODE *) malloc(sizeof(NODE));
+		newnode->row = row;
+		newnode->col = col;
+		newnode->val = num;
+
+		//Connects the new node to the tail of the linked list
+		viewer->next = newnode;
+		//Points the pointer to NULL to avoid dangling
+		newnode->next = NULL;
+	}
 
 }
 
@@ -110,7 +131,7 @@ void printMatrix(NODE **matrix, int row, int col){
 
 	for(i=0; i<row; i++){
 		for(j=0; j<col; j++){
-			printf("%d ", (matrix[i][j]).val);
+			printf("%d ", (*(*(matrix+i)+j)).val);
 		}
 		printf("\n");
 	}

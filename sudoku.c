@@ -40,13 +40,13 @@ int main(){
     int num_of_boards; // Number of iteration for test case
     int subgrid_size, board_size, **board; // Variables for the board
     int stack_row_size, stack_col_size; // Variables for the stacks
-    NODE **stacks;
+    NODE *stacks;
     // ------------------------------------------------------------------------------ //
 
 
     // ------------------------------------------------------------------------------ //
     // ACCESSING INPUT FILE
-    fp = fopen("test.in", "r"); // File open
+    fp = fopen("milestone1.in", "r"); // File open
     fscanf(fp, "%d\n", &num_of_boards); // Scans number of boards
 
     while(num_of_boards > 0){ // Loop until all boards are solved
@@ -65,9 +65,9 @@ int main(){
     // ------------------------------------------------------------------------------ //
 
         /* 
-            The implementation of stack will be a 2D array where: 
-                ROW == number of stacks or number of blank spaces on the board
-                COLUMN == max number of options or board size
+            The implementation of stack will be an array of linked list where: 
+                SIZE_OF_ARRAY == number of stacks or number of blank spaces on the board
+                NUMBER_OF_NODES == max number of options or board size
             The Top Of Stack (TOS) is the first element of each row in the array.
         */
         
@@ -75,33 +75,24 @@ int main(){
         stack_col_size = board_size;
 
         // Dynamically allocate the stacks
-        stacks = (NODE **) malloc(stack_row_size * sizeof(NODE *));
-        for(i=0; i<stack_col_size; i++)
-            stacks[i] = (NODE *) malloc(stack_col_size * (sizeof(NODE)));
-
+        stacks = (NODE *) malloc(stack_row_size * (sizeof(NODE)));
         int stack_row=0, stack_col=0;
 
         for(i=0; i<board_size; i++){
             for(j=0; j<board_size; j++){
-                if(board[i][j] == 0){
+                if(board[i][j] == BLANK){
                     for(int num=1; num<board_size+1; num++){
                         if(isSafe(board, board_size, subgrid_size, i, j, num)){
                             printf("SAFE: %d %d %d\n", i, j, num);
 
-                            stacks[stack_row][stack_col].val = num;
-                            stacks[stack_row][stack_col].row = i;
-                            stacks[stack_row][stack_col].col = j;
+                            if(board[i][j] == BLANK){
+                                board[i][j] = num;
 
-                            if(board[i][j] == 0) board[i][j] = num;
-                            
-                            printBoard(board, board_size); // Print the board   
-                            
-                            stack_col++;
+                            }         
                         }
                     }
                 }
             }
-                    stack_row++;
         }
 
         // printMatrix(stacks, stack_row_size, stack_col_size);
