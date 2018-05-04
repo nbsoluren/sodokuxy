@@ -40,13 +40,13 @@ int main(){
     int num_of_boards; // Number of iteration for test case
     int subgrid_size, board_size, **board; // Variables for the board
     int stack_row_size, stack_col_size; // Variables for the stacks
-    NODE *stacks;
+    NODE **stacks;
     // ------------------------------------------------------------------------------ //
 
 
     // ------------------------------------------------------------------------------ //
     // ACCESSING INPUT FILE
-    fp = fopen("milestone1.in", "r"); // File open
+    fp = fopen("test.in", "r"); // File open
     fscanf(fp, "%d\n", &num_of_boards); // Scans number of boards
 
     while(num_of_boards > 0){ // Loop until all boards are solved
@@ -75,7 +75,7 @@ int main(){
         stack_col_size = board_size;
 
         // Dynamically allocate the stacks
-        stacks = (NODE *) malloc(stack_row_size * (sizeof(NODE)));
+        stacks = (NODE **) malloc(stack_row_size * (sizeof(NODE*)));
         int stack_row=0, stack_col=0;
 
         for(i=0; i<board_size; i++){
@@ -87,21 +87,20 @@ int main(){
 
                             if(board[i][j] == BLANK){
                                 board[i][j] = num;
-
                             }         
+                            push(&stacks[stack_row], i, j, num);
                         }
                     }
+                    stack_row++;
                 }
             }
         }
 
-        // printMatrix(stacks, stack_row_size, stack_col_size);
-        // while((stacks[0][0]).val){
-
-        // }
+        printStacks(stacks, stack_row_size); //Print the stacks
 
         printBoard(board, board_size); // Print the board
-        destroy(board, board_size); // Free the board
+        destroy_int(board, board_size); // Free the board
+        for(i=0; i<stack_row_size; i++) destroy_node(&stacks[i]); // Free the stacks
         num_of_boards--; // Decrementor
     }
 
