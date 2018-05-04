@@ -9,6 +9,7 @@ typedef struct node{
     int row;
     int col;
     int val;
+	struct node *next;
 }NODE;
 // ---------------------------------------------------------------------------------- //
 
@@ -18,7 +19,7 @@ typedef struct node{
 
 // Function that prints a Matrix
 void printBoard(int **board, int size){
-	printf("---------------------------\n");
+	printf("BOARD----------------------\n");
 	for(int i=0; i<size; i++){
 		for(int j=0; j<size; j++){
 			printf("%2d ", *(*(board+i)+j));
@@ -29,11 +30,22 @@ void printBoard(int **board, int size){
 }
 
 // Frees dynamically allocated board
-void destroy(int **board, int board_size){
+void destroy_int(int **board, int board_size){
   for(int i=0; i<board_size; i++){
     int *currentIntPtr = board[i];
     free(currentIntPtr);
   }
+}
+
+//Creates a function that frees the linked list when the program terminates
+void destroy_node(NODE **head){
+	if(*head==NULL){
+		free(*head);
+	}else{
+		while(*head!=NULL){
+			destroy_node(head);
+		}
+	}
 }
 
 // Checks if number is already used in the row
@@ -86,32 +98,63 @@ int findBlank(int **board, int board_size){
 }
 
 // Pop Function
-void pop(NODE stack[], int stack_size){
-	int i;
-	NODE val = stack[0]; // Get TOS
-	for(i=1; i<stack_size-1; i++){ // Move elements of the stack to the left
-		stack[i-1] = stack[i];
+void pop(NODE **head){
+	if(*head!=NULL){//Checks if the list is not empty
+		NODE *toDelete = *head; //Declares a pointer that points to the head
+		*head = (*head)->next; //Points the head to the next node
+		free(toDelete); //Deletes the node
 	}
 }
 
 // Push Function
-void push(NODE **stacks, int row, int col, NODE newnode){
-	stacks[row][col] = newnode;
+void push(NODE **head, int row, int col, int num){
+	// Variable Declaration
+	NODE *viewer = *head;
+	
+	if(*head == NULL){ //Checks if the list is empty
+		*head = (NODE *) malloc(sizeof(NODE));
+		(*head)->row = row;
+		(*head)->col = col;
+		(*head)->val = num;
+
+		//Points the pointer to NULL to avoid dangling
+		(*head)->next = NULL;
+	}else{
+		//Traverses the linked list to find the tail
+		while(viewer->next!=NULL) viewer=viewer->next;
+		NODE *newnode = (NODE *) malloc(sizeof(NODE));
+		newnode->row = row;
+		newnode->col = col;
+		newnode->val = num;
+
+		//Connects the new node to the tail of the linked list
+		viewer->next = newnode;
+		//Points the pointer to NULL to avoid dangling
+		newnode->next = NULL;
+	}
 }
 
-void fillUp(){
+//Creates a function that views the contents of the linked list
+void view(NODE **head){
+	//Variable Declaration
+	NODE *viewer = *head;
+	if(viewer!=NULL){
+	printf("STACKS---------------------\n");
+		//Traverses the linked list until the tail is found
+		while(viewer!=NULL){
+			printf("%2d", viewer->val);
+			viewer=viewer->next;
+		}
+	printf("---------------------------\n");
+	}
+}
 
+void printStacks(NODE **stacks, int stack_row_size){
+	for(int i=0; i<stack_row_size; i++){
+		view(&stacks[i]);
+		printf("\n");
+	}
+	printf("\n");	
 }
 
 // ---------------------------------------------------------------------------------- //
-
-void printMatrix(NODE **matrix, int row, int col){
-	int i, j;
-
-	for(i=0; i<row; i++){
-		for(j=0; j<col; j++){
-			printf("%d ", (matrix[i][j]).val);
-		}
-		printf("\n");
-	}
-}
