@@ -139,22 +139,21 @@ void view(NODE **head){
 	//Variable Declaration
 	NODE *viewer = *head;
 	if(viewer!=NULL){
-	printf("STACKS---------------------\n");
 		//Traverses the linked list until the tail is found
 		while(viewer!=NULL){
 			printf("%2d", viewer->val);
 			viewer=viewer->next;
 		}
-	printf("---------------------------\n");
 	}
 }
 
 void printStacks(NODE **stacks, int stack_row_size){
+	printf("\nSTACKS---------------------\n");
 	for(int i=0; i<stack_row_size; i++){
 		view(&stacks[i]);
 		printf("\n");
 	}
-	printf("\n");	
+	printf("---------------------------\n");
 }
 
 // ---------------------------------------------------------------------------------- //

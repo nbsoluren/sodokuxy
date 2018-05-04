@@ -83,7 +83,7 @@ int main(){
                 if(board[i][j] == BLANK){
                     for(int num=1; num<board_size+1; num++){
                         if(isSafe(board, board_size, subgrid_size, i, j, num)){
-                            printf("SAFE: %d %d %d\n", i, j, num);
+                            // printf("SAFE: %d %d %d\n", i, j, num);
 
                             if(board[i][j] == BLANK){
                                 board[i][j] = num;
