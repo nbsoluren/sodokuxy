@@ -78,26 +78,46 @@ int main(){
         stacks = (NODE **) malloc(stack_row_size * (sizeof(NODE*)));
         int stack_row=0, stack_col=0;
 
-        for(i=0; i<board_size; i++){
-            for(j=0; j<board_size; j++){
-                if(board[i][j] == BLANK){
-                    for(int num=1; num<board_size+1; num++){
-                        if(isSafe(board, board_size, subgrid_size, i, j, num)){
-                            // printf("SAFE: %d %d %d\n", i, j, num);
+        NODE *viewer;    
 
-                            if(board[i][j] == BLANK){
-                                board[i][j] = num;
-                            }         
-                            push(&stacks[stack_row], i, j, num);
+        do{
+            for(i=0; i<board_size; i++){
+                for(j=0; j<board_size; j++){
+                    if(board[i][j] == BLANK){
+                        for(int num=1; num<board_size+1; num++){
+                            if(isSafe(board, board_size, subgrid_size, i, j, num)){
+                                // printf("SAFE: %d %d %d\n", i, j, num);
+
+                                // Push to stack 
+                                push(&stacks[stack_row], i, j, num);
+
+                                // Populate the board using the Top of Stacks 
+                                for(int l=0; l<stack_row_size; l++){
+                                    viewer = stacks[l];
+                                    if(viewer!=NULL){
+                                        //Traverses the linked list until the tail is found
+                                        while(viewer!=NULL){
+                                            board[viewer->row][viewer->col] = viewer->val;
+                                            viewer=viewer->next;
+                                        }
+                                    }
+                                }    
+                            }
                         }
+                        stack_row++;
                     }
-                    stack_row++;
                 }
             }
-        }
 
-        printStacks(stacks, stack_row_size); //Print the stacks
+            printStacks(stacks, stack_row_size); //Print the stacks
+        
+            for(int k=0; k<stack_row_size; k++){
+                                
+            }
 
+        }while(stacks[0]!=NULL);
+
+        
         printBoard(board, board_size); // Print the board
         destroy_int(board, board_size); // Free the board
         for(i=0; i<stack_row_size; i++) destroy_node(&stacks[i]); // Free the stacks
