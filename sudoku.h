@@ -77,6 +77,68 @@ bool usedInBox(int **board, int subgrid_size, int boxStartRow, int boxStartCol, 
 	}
 	return false;
 }
+//Checks if sudoku x
+bool isSudokuX(int **board, int board_size){
+	int x,a1[board_size],a2[board_size];
+	
+	//put the numbers \ diagonal in an array
+	for(x=0;x<board_size;x++){
+		a1[x]=board[x][x];
+
+	}  
+	//put the numbers in / diagonal in an array
+	for(x=0;x<board_size;x++){
+		a2[x]=board[x][board_size-(x+1)];
+	
+	}  
+	//check if numbers are repeating
+	int *count = (int *)calloc(sizeof(int), (board_size - 2));
+	for(x=0;x<board_size;x++){ 
+		if(count[a1[x]] == 1 || count[a2[x]]==1){
+			return false;
+		}
+		
+	} 
+	return true;
+}
+bool isSudokuY(int **board, int board_size){
+	int half = (board_size/2);
+	int x,a1[half],a2[half],b3[half];
+	
+	if(board_size % 2== 0){
+		return false;
+	}else{
+		//put upper diagonals in an 2 diff arrays
+		for(x=0;x<half;x++){
+			a1[x]=board[x][x];
+		}
+	
+		for(x=0;x<(half+1);x++){
+			a2[x]=board[half-(x)][half+(x)];
+		}
+		//put lower part of y in an array
+		for(x=0;x<(half+1);x++){
+			b3[x]=board[x+half][half];
+		}
+
+		//check if numbers are repeating
+		int *count = (int *)calloc(sizeof(int), (half - 2));
+		for(x=0;x<half;x++){ 
+			if(count[a1[x]] == 1||count[a2[x]]==1 || count[b3[x]]==1){
+				return false;
+			}
+		} 
+		return true;
+
+	}
+	
+}
+bool isSudokuXY(int **board, int board_size){
+	if(isSudokuX(board,board_size)==true && isSudokuY(board,board_size)==true){
+		return true;
+	}
+	return false;
+}
 
 // Checks if number is safe to input to the board
 bool isSafe(int **board, int board_size, int subgrid_size, int row, int col, int num){
@@ -173,18 +235,28 @@ void populate(int **board, NODE **stacks, int stack_row_size){
 	}
 }
 
-void backtrack(int **board, NODE **stacks, int stack_row_size){
-	NODE *viewer;    
-
+int backtrack(int **board, NODE **stacks, int stack_row_size, int board_size){
 	// Populate the board using the Top of Stacks 
-	for(int l=stack_row_size; l>0; l--){
-		viewer = stacks[l];
-
-		pop(&viewer);
-		
-		if(viewer!=NULL){
-			break;
+	int l=0;
+	for(l=stack_row_size-1; l>0; l--){
+		if(stacks[l]->next != NULL){
+			board[stacks[l]->row][stacks[l]->col] = stacks[l]->next->val;
+			printf("popping head %d; replaced by %d\n", stacks[l]->val, stacks[l]->next->val);
+			
+			// Change rows and columns of replacing node 
+			stacks[l]->next->row = stacks[l]->row;
+			stacks[l]->next->col = stacks[l]->col;
+			
+			pop(&stacks[l]);
+		}else{
+			board[stacks[l]->row][stacks[l]->col] = 0;
+			printf("popping head %d\n", stacks[l]->val);
+			pop(&stacks[l]);    
 		}
+
+		printBoard(board, board_size); // Print the board
+		if(stacks[l] != NULL) break; //Checks if there's a next value after popping	
 	}
+	return l; //return the index of last popped number
 }
 // ---------------------------------------------------------------------------------- //
