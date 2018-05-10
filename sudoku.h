@@ -156,4 +156,35 @@ void printStacks(NODE **stacks, int stack_row_size){
 	printf("---------------------------\n");
 }
 
+void populate(int **board, NODE **stacks, int stack_row_size){
+	NODE *viewer;    
+
+	// Populate the board using the Top of Stacks 
+	for(int l=0; l<stack_row_size; l++){
+		viewer = stacks[l];
+		if(viewer!=NULL){
+			//Traverses the linked list until the tail is found
+			while(viewer!=NULL){
+				if(board[viewer->row][viewer->col] == 0)
+					board[viewer->row][viewer->col] = viewer->val;
+				viewer=viewer->next;
+			}
+		}
+	}
+}
+
+void backtrack(int **board, NODE **stacks, int stack_row_size){
+	NODE *viewer;    
+
+	// Populate the board using the Top of Stacks 
+	for(int l=stack_row_size; l>0; l--){
+		viewer = stacks[l];
+
+		pop(&viewer);
+		
+		if(viewer!=NULL){
+			break;
+		}
+	}
+}
 // ---------------------------------------------------------------------------------- //
