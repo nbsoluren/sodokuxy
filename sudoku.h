@@ -77,6 +77,68 @@ bool usedInBox(int **board, int subgrid_size, int boxStartRow, int boxStartCol, 
 	}
 	return false;
 }
+//Checks if sudoku x
+bool isSudokuX(int **board, int board_size){
+	int x,a1[board_size],a2[board_size];
+	
+	//put the numbers \ diagonal in an array
+	for(x=0;x<board_size;x++){
+		a1[x]=board[x][x];
+
+	}  
+	//put the numbers in / diagonal in an array
+	for(x=0;x<board_size;x++){
+		a2[x]=board[x][board_size-(x+1)];
+	
+	}  
+	//check if numbers are repeating
+	int *count = (int *)calloc(sizeof(int), (board_size - 2));
+	for(x=0;x<board_size;x++){ 
+		if(count[a1[x]] == 1 || count[a2[x]]==1){
+			return false;
+		}
+		
+	} 
+	return true;
+}
+bool isSudokuY(int **board, int board_size){
+	int half = (board_size/2);
+	int x,a1[half],a2[half],b3[half];
+	
+	if(board_size % 2== 0){
+		return false;
+	}else{
+		//put upper diagonals in an 2 diff arrays
+		for(x=0;x<half;x++){
+			a1[x]=board[x][x];
+		}
+	
+		for(x=0;x<(half+1);x++){
+			a2[x]=board[half-(x)][half+(x)];
+		}
+		//put lower part of y in an array
+		for(x=0;x<(half+1);x++){
+			b3[x]=board[x+half][half];
+		}
+
+		//check if numbers are repeating
+		int *count = (int *)calloc(sizeof(int), (half - 2));
+		for(x=0;x<half;x++){ 
+			if(count[a1[x]] == 1||count[a2[x]]==1 || count[b3[x]]==1){
+				return false;
+			}
+		} 
+		return true;
+
+	}
+	
+}
+bool isSudokuXY(int **board, int board_size){
+	if(isSudokuX(board,board_size)==true && isSudokuY(board,board_size)==true){
+		return true;
+	}
+	return false;
+}
 
 // Checks if number is safe to input to the board
 bool isSafe(int **board, int board_size, int subgrid_size, int row, int col, int num){
