@@ -165,7 +165,8 @@ void populate(int **board, NODE **stacks, int stack_row_size){
 		if(viewer!=NULL){
 			//Traverses the linked list until the tail is found
 			while(viewer!=NULL){
-				board[viewer->row][viewer->col] = viewer->val;
+				if(board[viewer->row][viewer->col] == 0)
+					board[viewer->row][viewer->col] = viewer->val;
 				viewer=viewer->next;
 			}
 		}
