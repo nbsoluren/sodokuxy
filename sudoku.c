@@ -88,22 +88,24 @@ int main(){
                         for(int num=1; num<board_size+1; num++){
                             if(isSafe(board, board_size, subgrid_size, i, j, num)){
                                 // Push to stack 
-                                printf("pushing %d to stack %d, i: %d, j: %d\n", num, stack_row+1, i,j);
+                                // printf("pushing %d to stack %d, i: %d, j: %d\n", num, stack_row+1, i,j);
                                 push(&stacks[stack_row], i, j, num);
 
                                 populate(board, stacks, stack_row_size);
-	                            printBoard(board, board_size); // Print the board
+	                            // printBoard(board, board_size); // Print the board
                                 safe++;
                             }
 
                         }
                         if(safe == 0){
-                            printf("No safe numbers found!\n");
-                            printStacks(stacks, stack_row_size); //Print the stacks
-                            printf("premature backtrack\n");
+                            // printf("No safe numbers found!\n");
+                            // printf("premature backtrack\n");
                             stack_row = backtrack(board, stacks, stack_row, board_size);
-                            i--;
-                            j--;    
+                            // printStacks(stacks, stack_row_size); //Print the stacks
+                            
+                            i = stacks[stack_row]->row;
+                            j = stacks[stack_row]->col;    
+
                         } 
                         safe=0;
                         stack_row++;
@@ -114,13 +116,13 @@ int main(){
             count_sudoku++; // Solution Found! Increment counter!
             printf("\nSolution %d Found!\n", count_sudoku);    
             printBoard(board, board_size); // Print the board
-            printStacks(stacks, stack_row_size); //Print the stacks
+            // printStacks(stacks, stack_row_size); //Print the stacks
 
             l = backtrack(board, stacks, stack_row_size, board_size);
         }while(stacks[0]!=NULL);
         
         destroy_int(board, board_size); // Free the board
-        printBoard(board, board_size); // Print the board
+        // printBoard(board, board_size); // Print the board
             
         // for(i=0; i<stack_row_size; i++) destroy_node(&stacks[i]); // Free the stacks
         num_of_boards--; // Decrementor
