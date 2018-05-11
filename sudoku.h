@@ -180,18 +180,12 @@ int backtrack(int **board, NODE **stacks, int stack_row_size, int board_size){
 		if(stacks[l]->next != NULL){
 			board[stacks[l]->row][stacks[l]->col] = stacks[l]->next->val;
 			// printf("popping head %d; replaced by %d\n", stacks[l]->val, stacks[l]->next->val);
-			
-			// Change rows and columns of replacing node 
-			stacks[l]->next->row = stacks[l]->row;
-			stacks[l]->next->col = stacks[l]->col;
-			
 			pop(&stacks[l]);
-		}else{
+		}else if(stacks[l]->next == NULL){
 			board[stacks[l]->row][stacks[l]->col] = 0;
 			// printf("popping head %d\n", stacks[l]->val);
 			pop(&stacks[l]);    
 		}
-
 		if(stacks[l] != NULL) break; //Checks if there's a next value after popping	
 	}
 	// printBoard(board, board_size); // Print the board
