@@ -192,9 +192,9 @@ int backtrack(int **board, NODE **stacks, int stack_row_size, int board_size){
 			pop(&stacks[l]);    
 		}
 
-		printBoard(board, board_size); // Print the board
 		if(stacks[l] != NULL) break; //Checks if there's a next value after popping	
 	}
+	printBoard(board, board_size); // Print the board
 	return l; //return the index of last popped number
 }
 // ---------------------------------------------------------------------------------- //

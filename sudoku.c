@@ -78,6 +78,7 @@ int main(){
         // Dynamically allocate the stacks
         stacks = (NODE **) malloc(stack_row_size * (sizeof(NODE*)));
         int stack_row;
+        int safe=0;
 
         do{
             stack_row=l+1;
@@ -91,10 +92,20 @@ int main(){
                                 push(&stacks[stack_row], i, j, num);
 
                                 populate(board, stacks, stack_row_size);
-
+	                            printBoard(board, board_size); // Print the board
+                                safe++;
                             }
 
                         }
+                        if(safe == 0){
+                            printf("No safe numbers found!\n");
+                            printStacks(stacks, stack_row_size); //Print the stacks
+                            printf("premature backtrack\n");
+                            stack_row = backtrack(board, stacks, stack_row, board_size);
+                            i--;
+                            j--;    
+                        } 
+                        safe=0;
                         stack_row++;
                     }
                 }
