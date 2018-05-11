@@ -112,7 +112,6 @@ int main(){
                     }
                 }
             }
-
             count_sudoku++; // Solution Found! Increment counter!
             printf("\nSolution %d Found!\n", count_sudoku);    
             printBoard(board, board_size); // Print the board
