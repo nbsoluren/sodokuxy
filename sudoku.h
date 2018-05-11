@@ -80,31 +80,31 @@ bool usedInBox(int **board, int subgrid_size, int boxStartRow, int boxStartCol, 
 //Checks if sudoku x
 bool isSudokuX(int **board, int board_size){
 	int x,a1[board_size],a2[board_size];
-	
+
 	//put the numbers \ diagonal in an array
 	for(x=0;x<board_size;x++){
 		a1[x]=board[x][x];
 
-	}  
+	}
 	//put the numbers in / diagonal in an array
 	for(x=0;x<board_size;x++){
 		a2[x]=board[x][board_size-(x+1)];
-	
-	}  
+
+	}
 	//check if numbers are repeating
 	int *count = (int *)calloc(sizeof(int), (board_size - 2));
-	for(x=0;x<board_size;x++){ 
+	for(x=0;x<board_size;x++){
 		if(count[a1[x]] == 1 || count[a2[x]]==1){
 			return false;
 		}
-		
-	} 
+
+	}
 	return true;
 }
 bool isSudokuY(int **board, int board_size){
 	int half = (board_size/2);
 	int x,a1[half],a2[half],b3[half];
-	
+
 	if(board_size % 2== 0){
 		return false;
 	}else{
@@ -112,7 +112,7 @@ bool isSudokuY(int **board, int board_size){
 		for(x=0;x<half;x++){
 			a1[x]=board[x][x];
 		}
-	
+
 		for(x=0;x<(half+1);x++){
 			a2[x]=board[half-(x)][half+(x)];
 		}
@@ -123,15 +123,15 @@ bool isSudokuY(int **board, int board_size){
 
 		//check if numbers are repeating
 		int *count = (int *)calloc(sizeof(int), (half - 2));
-		for(x=0;x<half;x++){ 
+		for(x=0;x<half;x++){
 			if(count[a1[x]] == 1||count[a2[x]]==1 || count[b3[x]]==1){
 				return false;
 			}
-		} 
+		}
 		return true;
 
 	}
-	
+
 }
 bool isSudokuXY(int **board, int board_size){
 	if(isSudokuX(board,board_size)==true && isSudokuY(board,board_size)==true){
@@ -172,7 +172,7 @@ void pop(NODE **head){
 void push(NODE **head, int row, int col, int num){
 	// Variable Declaration
 	NODE *viewer = *head;
-	
+
 	if(*head == NULL){ //Checks if the list is empty
 		*head = (NODE *) malloc(sizeof(NODE));
 		(*head)->row = row;
@@ -183,16 +183,16 @@ void push(NODE **head, int row, int col, int num){
 		(*head)->next = NULL;
 	}else{
 		//Traverses the linked list to find the tail
-		while(viewer->next!=NULL) viewer=viewer->next;
 		NODE *newnode = (NODE *) malloc(sizeof(NODE));
 		newnode->row = row;
 		newnode->col = col;
 		newnode->val = num;
 
-		//Connects the new node to the tail of the linked list
-		viewer->next = newnode;
+		// Connects the new node to the tail of the linked list
+		// viewer->next = newnode;
 		//Points the pointer to NULL to avoid dangling
-		newnode->next = NULL;
+		newnode->next = viewer;
+    *head = newnode;
 	}
 }
 
@@ -219,9 +219,9 @@ void printStacks(NODE **stacks, int stack_row_size){
 }
 
 void populate(int **board, NODE **stacks, int stack_row_size){
-	NODE *viewer;    
+	NODE *viewer;
 
-	// Populate the board using the Top of Stacks 
+	// Populate the board using the Top of Stacks
 	for(int l=0; l<stack_row_size; l++){
 		viewer = stacks[l];
 		if(viewer!=NULL){
@@ -236,7 +236,7 @@ void populate(int **board, NODE **stacks, int stack_row_size){
 }
 
 int backtrack(int **board, NODE **stacks, int stack_row_size, int board_size){
-	// Populate the board using the Top of Stacks 
+	// Populate the board using the Top of Stacks
 	int l=0;
 	for(l=stack_row_size-1; l>=0; l--){
 		if(stacks[l]->next != NULL){
@@ -246,9 +246,9 @@ int backtrack(int **board, NODE **stacks, int stack_row_size, int board_size){
 		}else if(stacks[l]->next == NULL){
 			board[stacks[l]->row][stacks[l]->col] = 0;
 			// printf("popping head %d\n", stacks[l]->val);
-			pop(&stacks[l]);    
+			pop(&stacks[l]);
 		}
-		if(stacks[l] != NULL) break; //Checks if there's a next value after popping	
+		if(stacks[l] != NULL) break; //Checks if there's a next value after popping
 	}
 	// printBoard(board, board_size); // Print the board
 	return l; //return the index of last popped number
