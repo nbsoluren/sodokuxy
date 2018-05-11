@@ -9,7 +9,7 @@
 
   Description:
     SUDOKU SOLVER:
-    Gets the number of all possible solution to a 
+    Gets the number of all possible solution to a
     Sudoku Puzzle
 */
 
@@ -32,11 +32,11 @@
 // ---------------------------------------------------------------------------------- //
 // MAIN FUNCTION
 int main(){
-    
+
     // ------------------------------------------------------------------------------ //
     // VARIABLE DECLARATIONS
-    FILE *fp; 
-    int i, j, l=-1; // Iterators 
+    FILE *fp;
+    int i, j, l=-1; // Iterators
     int num_of_boards; // Number of iteration for test case
     int subgrid_size, board_size, **board; // Variables for the board
     int stack_row_size, stack_col_size; // Variables for the stacks
@@ -66,22 +66,22 @@ int main(){
             fscanf(fp, "%d ", &board[i][j]);
     // ------------------------------------------------------------------------------ //
 
-        /* 
-            The implementation of stack will be an array of linked list where: 
+        /*
+            The implementation of stack will be an array of linked list where:
                 SIZE_OF_ARRAY == number of stacks or number of blank spaces on the board
                 NUMBER_OF_NODES == max number of options or board size
             The Top Of Stack (TOS) is the first element of each row in the array.
         */
-        
+
         stack_row_size = findBlank(board, board_size);
         stack_col_size = board_size;
 
         // Dynamically allocate the stacks
         stacks = (NODE **) malloc(stack_row_size * (sizeof(NODE*)));
-        stack_row=0; 
+        stack_row=0;
         safe=0; // Checker if there is a safe number detected
         int check=0;
-        
+
         do{
             stack_row=l+1;
             for(i=0; i<board_size; i++){
@@ -89,7 +89,7 @@ int main(){
                     if(board[i][j] == BLANK){
                         for(int num=1; num<board_size+1; num++){
                             if(isSafe(board, board_size, subgrid_size, i, j, num)){
-                                // Push to stack 
+                                // Push to stack
                                 // printf("pushing %d to stack %d, i: %d, j: %d\n", num, stack_row+1, i,j);
                                 push(&stacks[stack_row], i, j, num);
                                 populate(board, stacks, stack_row_size);
@@ -104,16 +104,16 @@ int main(){
                             // printStacks(stacks, stack_row_size);
                             if(stacks[stack_row] != NULL){
                                 i = stacks[stack_row]->row;
-                                j = stacks[stack_row]->col;    
+                                j = stacks[stack_row]->col;
                             }
-                        } 
+                        }
                         safe=0;
                         stack_row++;
                     }
                 }
             }
             count_sudoku++; // Solution Found! Increment counter!
-            printf("\nSolution %d Found!\n", count_sudoku);    
+            printf("\nSolution %d Found!\n", count_sudoku);
             printBoard(board, board_size); // Print the board
             // printStacks(stacks, stack_row_size);
             l = backtrack(board, stacks, stack_row_size, board_size);
@@ -122,9 +122,10 @@ int main(){
         printf("\nFinished looking for solutions.\n\n");
         if(count_sudoku == 0) printf("\nNo solutions found!\n");
         destroy_int(board, board_size); // Free the board
-        // printBoard(board, board_size); // Print the board         
+        // printBoard(board, board_size); // Print the board
         // for(i=0; i<stack_row_size; i++) destroy_node(&stacks[i]); // Free the stacks
         num_of_boards--; // Decrementor
+        count_sudoku=0;
     }
 
     return 0;
@@ -133,4 +134,3 @@ int main(){
 
 // ---------------------------------------------------------------------------------- //
 // RESOURCES:
- 
