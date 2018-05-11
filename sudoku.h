@@ -79,7 +79,7 @@ bool usedInBox(int **board, int subgrid_size, int boxStartRow, int boxStartCol, 
 }
 //Checks if sudoku x
 bool isSudokuX(int **board, int board_size){
-	int x,a1[board_size],a2[board_size];
+	int x,y,a1[board_size],a2[board_size];
 	
 	//put the numbers \ diagonal in an array
 	for(x=0;x<board_size;x++){
@@ -89,47 +89,82 @@ bool isSudokuX(int **board, int board_size){
 	//put the numbers in / diagonal in an array
 	for(x=0;x<board_size;x++){
 		a2[x]=board[x][board_size-(x+1)];
-	
 	}  
+	
 	//check if numbers are repeating
 	int *count = (int *)calloc(sizeof(int), (board_size - 2));
-	for(x=0;x<board_size;x++){ 
-		if(count[a1[x]] == 1 || count[a2[x]]==1){
+	int *count2 = (int *)calloc(sizeof(int), (board_size - 2));
+	for(x=0;x<board_size;x++){  
+		if(count[a1[x]] == 1){
 			return false;
+		}else{
+			count[a1[x]]++;
 		}
-		
+	} 
+	for(y=0;y<board_size;y++){
+		if(count2[a2[y]] == 1){
+			return false;
+		}else{
+			count2[a2[y]]++;
+		}
 	} 
 	return true;
 }
+//Check if Sudoku Y
 bool isSudokuY(int **board, int board_size){
 	int half = (board_size/2);
-	int x,a1[half],a2[half],b3[half];
+	int x,a1[half],a2[half],b3[half+1];
 	
 	if(board_size % 2== 0){
 		return false;
 	}else{
 		//put upper diagonals in an 2 diff arrays
-		for(x=0;x<half;x++){
+		for(x=0;x<(half);x++){
 			a1[x]=board[x][x];
+		
 		}
 	
-		for(x=0;x<(half+1);x++){
-			a2[x]=board[half-(x)][half+(x)];
+		for(x=0;x<(half);x++){
+			a2[x]=board[(half)-(x+1)][half+(x+1)];
 		}
 		//put lower part of y in an array
 		for(x=0;x<(half+1);x++){
 			b3[x]=board[x+half][half];
 		}
 
+		
+
 		//check if numbers are repeating
-		int *count = (int *)calloc(sizeof(int), (half - 2));
-		for(x=0;x<half;x++){ 
-			if(count[a1[x]] == 1||count[a2[x]]==1 || count[b3[x]]==1){
+		int *count = (int *)calloc(sizeof(int), (board_size - 2));
+		int *count2 = (int *)calloc(sizeof(int), (board_size - 2));
+		
+		//concat
+		int* total1 = malloc(board_size * sizeof(int));
+		int* total2 = malloc(board_size * sizeof(int));
+
+		memcpy(total1,a1,(half)*sizeof(int));
+		memcpy(total1 + half,b3,(half+1)*sizeof(int));	
+
+		memcpy(total2,a2,(half)*sizeof(int));
+		memcpy(total2 + half,b3,(half+1)*sizeof(int));	
+
+	
+		for(x=0;x<board_size;x++){ 
+			if(count[total1[x]] == 1){
 				return false;
+			}else{
+				count[total1[x]]++;
+			}
+		}
+
+		for(x=0;x<board_size;x++){ 
+			if(count2[total2[x]] == 1){
+				return false;
+			}else{
+				count2[total2[x]]++;
 			}
 		} 
 		return true;
-
 	}
 	
 }
