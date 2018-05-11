@@ -238,10 +238,10 @@ void populate(int **board, NODE **stacks, int stack_row_size){
 int backtrack(int **board, NODE **stacks, int stack_row_size, int board_size){
 	// Populate the board using the Top of Stacks 
 	int l=0;
-	for(l=stack_row_size-1; l>0; l--){
+	for(l=stack_row_size-1; l>=0; l--){
 		if(stacks[l]->next != NULL){
 			board[stacks[l]->row][stacks[l]->col] = stacks[l]->next->val;
-			printf("popping head %d; replaced by %d\n", stacks[l]->val, stacks[l]->next->val);
+			// printf("popping head %d; replaced by %d\n", stacks[l]->val, stacks[l]->next->val);
 			
 			// Change rows and columns of replacing node 
 			stacks[l]->next->row = stacks[l]->row;
@@ -250,13 +250,13 @@ int backtrack(int **board, NODE **stacks, int stack_row_size, int board_size){
 			pop(&stacks[l]);
 		}else{
 			board[stacks[l]->row][stacks[l]->col] = 0;
-			printf("popping head %d\n", stacks[l]->val);
+			// printf("popping head %d\n", stacks[l]->val);
 			pop(&stacks[l]);    
 		}
 
 		if(stacks[l] != NULL) break; //Checks if there's a next value after popping	
 	}
-	printBoard(board, board_size); // Print the board
+	// printBoard(board, board_size); // Print the board
 	return l; //return the index of last popped number
 }
 // ---------------------------------------------------------------------------------- //
