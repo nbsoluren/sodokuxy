@@ -83,17 +83,18 @@ int main(){
         int check=0;
 
         do{
+            int error = 0;
             stack_row=l+1;
-            for(i=0; i<board_size; i++){
-                for(j=0; j<board_size; j++){
+            for(i=0; i<board_size && !error; i++){
+                for(j=0; j<board_size && !error; j++){
                     if(board[i][j] == BLANK){
-                        for(int num=1; num<board_size+1; num++){
+                        for(int num=1; num<board_size+1 && !error; num++){
                             if(isSafe(board, board_size, subgrid_size, i, j, num)){
                                 // Push to stack
                                 // printf("pushing %d to stack %d, i: %d, j: %d\n", num, stack_row+1, i,j);
                                 push(&stacks[stack_row], i, j, num);
                                 populate(board, stacks, stack_row_size);
-	                            // printBoard(board, board_size); // Print the board
+                                // printBoard(board, board_size); // Print the board
                                 safe++;
                             }
                         }
@@ -101,6 +102,10 @@ int main(){
                             // printf("No safe numbers found!\n");
                             // printf("premature backtrack\n");
                             stack_row = backtrack(board, stacks, stack_row, board_size);
+                            if(stack_row<0){
+                                error = 1;
+                                break;
+                            }
                             // printStacks(stacks, stack_row_size);
                             if(stacks[stack_row] != NULL){
                                 i = stacks[stack_row]->row;
@@ -112,6 +117,10 @@ int main(){
                     }
                 }
             }
+            if(error){
+                printf("\nNo solutions found!\n");
+                continue;
+            }
             count_sudoku++; // Solution Found! Increment counter!
             printf("\nSolution %d Found!\n", count_sudoku);
             printBoard(board, board_size); // Print the board
@@ -120,7 +129,6 @@ int main(){
         }while(stacks[0]!=NULL);
 
         printf("\nFinished looking for solutions.\n\n");
-        if(count_sudoku == 0) printf("\nNo solutions found!\n");
         destroy_int(board, board_size); // Free the board
         // printBoard(board, board_size); // Print the board
         // for(i=0; i<stack_row_size; i++) destroy_node(&stacks[i]); // Free the stacks
