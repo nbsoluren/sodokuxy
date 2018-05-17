@@ -88,17 +88,16 @@ int main(){
             for(i=0; i<board_size; i++){
                 for(j=0; j<board_size; j++){
                     if(board[i][j] == BLANK){
-                        for(int num=board_size; num>0; num--){
+                        for(int num=1; num<board_size+1; num++){
                             if(isSafe(board, board_size, subgrid_size, i, j, num)){
                                 // Push to stack 
                                 // printf("pushing %d to stack %d, i: %d, j: %d\n", num, stack_row+1, i,j);
                                 push(&stacks[stack_row], i, j, num);
+                                populate(board, stacks, stack_row_size);
 	                            // printBoard(board, board_size); // Print the board
-                                // printStacks(stacks, stack_row_size);
                                 safe++;
                             }
                         }
-                        populate(board, stacks, stack_row_size);
                         if(safe == 0){
                             // printf("No safe numbers found!\n");
                             // printf("premature backtrack\n");
