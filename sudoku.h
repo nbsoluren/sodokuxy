@@ -315,9 +315,9 @@ ANSWERS solve(int **board, int board_size, int subgrid_size, NODE **stacks, int 
 	int stack_row=0; 
 	int safe=0; // Checker if there is a safe number detected
 	int l=-1, i, j; // Iterators
-	int count_sudoku=0, count_sudokuX=0, count_sudokuY=0, count_sudokuXY=0;
-
 	ANSWERS counters;
+	counters.sudoku=0, counters.sudokuX=0, counters.sudokuY=0, counters.sudokuXY=0;
+
 
 	do{
 		stack_row=l+1;
@@ -345,10 +345,6 @@ ANSWERS solve(int **board, int board_size, int subgrid_size, NODE **stacks, int 
 							i = stacks[stack_row]->row;
 							j = stacks[stack_row]->col;  
 						}else{
-							counters.sudoku = count_sudoku;
-							counters.sudokuX = count_sudokuX;
-							counters.sudokuY = count_sudokuY;
-							counters.sudokuXY = count_sudokuXY;
 							return counters;    
 						}
 					} 
@@ -357,17 +353,12 @@ ANSWERS solve(int **board, int board_size, int subgrid_size, NODE **stacks, int 
 				}
 			}
 		}
-		count_sudoku++; // Solution Found! Increment counter!
-		printf("\nSolution %d Found!\n", count_sudoku);
+		counters.sudoku++; // Solution Found! Increment counter!
+		printf("\nSolution %d Found!\n", counters.sudoku);
 
-		if(isSudokuX(board, board_size) == true) count_sudokuX++;
-		if(isSudokuY(board, board_size) == true) count_sudokuY++;
-		if(isSudokuXY(board, board_size) == true) count_sudokuXY++;
-
-		counters.sudoku = count_sudoku;
-		counters.sudokuX = count_sudokuX;
-		counters.sudokuY = count_sudokuY;
-		counters.sudokuXY = count_sudokuXY;
+		if(isSudokuX(board, board_size) == true) counters.sudokuX++;
+		if(isSudokuY(board, board_size) == true) counters.sudokuY++;
+		if(isSudokuXY(board, board_size) == true) counters.sudokuXY++;
 
 		printBoard(board, board_size); // Print the board
 		// printStacks(stacks, stack_row_size);
