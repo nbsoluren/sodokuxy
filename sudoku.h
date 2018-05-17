@@ -11,6 +11,13 @@ typedef struct node{
     int val;
 	struct node *next;
 }NODE;
+
+typedef struct answers{
+	int sudoku;
+	int sudokuX;
+	int sudokuY;
+	int sudokuXY;
+}ANSWERS;
 // ---------------------------------------------------------------------------------- //
 
 
@@ -248,5 +255,71 @@ int backtrack(int **board, NODE **stacks, int stack_row_size, int board_size){
 	}
 	// printBoard(board, board_size); // Print the board
 	return l; //return the index of last popped number
+}
+
+ANSWERS solve(int **board, int board_size, int subgrid_size, NODE **stacks, int stack_row_size){
+	int stack_row=0; 
+	int safe=0; // Checker if there is a safe number detected
+	int l=-1, i, j; // Iterators
+	int count_sudoku=0, count_sudokuX=0, count_sudokuY=0, count_sudokuXY=0;
+
+	ANSWERS counters;
+
+	do{
+		stack_row=l+1;
+		for(i=0; i<board_size; i++){
+			for(j=0; j<board_size; j++){
+				if(board[i][j] == BLANK){
+					for(int num=board_size; num>0; num--){
+						if(isSafe(board, board_size, subgrid_size, i, j, num)){
+							// Push to stack 
+							// printf("pushing %d to stack %d, i: %d, j: %d\n", num, stack_row+1, i,j);
+							push(&stacks[stack_row], i, j, num);
+							// printBoard(board, board_size); // Print the board
+							// printStacks(stacks, stack_row_size);
+							safe++;
+						}
+					}
+					populate(board, stacks, stack_row_size); // Populate the board using Tops of Stacks
+					if(safe == 0){
+						// printf("No safe numbers found!\n");
+						// printf("premature backtrack\n");
+						stack_row = backtrack(board, stacks, stack_row, board_size);
+						// printStacks(stacks, stack_row_size);
+						
+						if(stack_row >= 0 && stack_row <= stack_row_size){
+							i = stacks[stack_row]->row;
+							j = stacks[stack_row]->col;  
+						}else{
+							counters.sudoku = count_sudoku;
+							counters.sudokuX = count_sudokuX;
+							counters.sudokuY = count_sudokuY;
+							counters.sudokuXY = count_sudokuXY;
+							return counters;    
+						}
+					} 
+					safe=0;
+					stack_row++;
+				}
+			}
+		}
+		count_sudoku++; // Solution Found! Increment counter!
+		printf("\nSolution %d Found!\n", count_sudoku);
+
+		if(isSudokuX(board, board_size) == true) count_sudokuX++;
+		if(isSudokuY(board, board_size) == true) count_sudokuY++;
+		if(isSudokuXY(board, board_size) == true) count_sudokuXY++;
+
+		counters.sudoku = count_sudoku;
+		counters.sudokuX = count_sudokuX;
+		counters.sudokuY = count_sudokuY;
+		counters.sudokuXY = count_sudokuXY;
+
+		printBoard(board, board_size); // Print the board
+		// printStacks(stacks, stack_row_size);
+		l = backtrack(board, stacks, stack_row_size, board_size);
+	}while(stacks[0]!=NULL);	
+
+	return counters;
 }
 // ---------------------------------------------------------------------------------- //
