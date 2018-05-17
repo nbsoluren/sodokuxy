@@ -11,6 +11,13 @@ typedef struct node{
     int val;
 	struct node *next;
 }NODE;
+
+typedef struct answers{
+	int sudoku;
+	int sudokuX;
+	int sudokuY;
+	int sudokuXY;
+}ANSWERS;
 // ---------------------------------------------------------------------------------- //
 
 
@@ -133,52 +140,42 @@ bool usedInBox(int **board, int subgrid_size, int boxStartRow, int boxStartCol, 
 }
 //Checks if sudoku x
 bool isSudokuX(int **board, int board_size){
-	int x,y,a1[board_size],a2[board_size];
-  
+	int x,a1[board_size],a2[board_size];
+	
 	//put the numbers \ diagonal in an array
 	for(x=0;x<board_size;x++){
 		a1[x]=board[x][x];
 
-	}
+	}  
 	//put the numbers in / diagonal in an array
 	for(x=0;x<board_size;x++){
 		a2[x]=board[x][board_size-(x+1)];
-  }  
 	
+	}  
 	//check if numbers are repeating
 	int *count = (int *)calloc(sizeof(int), (board_size - 2));
-	int *count2 = (int *)calloc(sizeof(int), (board_size - 2));
-	for(x=0;x<board_size;x++){  
-		if(count[a1[x]] == 1){
+	for(x=0;x<board_size;x++){ 
+		if(count[a1[x]] == 1 || count[a2[x]]==1){
 			return false;
-		}else{
-			count[a1[x]]++;
 		}
-	} 
-	for(y=0;y<board_size;y++){
-		if(count2[a2[y]] == 1){
-			return false;
-		}else{
-			count2[a2[y]]++;
-		}
+		
 	} 
 	return true;
 }
-//Check if Sudoku Y
 bool isSudokuY(int **board, int board_size){
 	int half = (board_size/2);
-	int x,a1[half],a2[half],b3[half+1];
-
+	int x,a1[half],a2[half],b3[half];
+	
 	if(board_size % 2== 0){
 		return false;
 	}else{
 		//put upper diagonals in an 2 diff arrays
-		for(x=0;x<(half);x++){
+		for(x=0;x<half;x++){
 			a1[x]=board[x][x];
 		}
 	
-		for(x=0;x<(half);x++){
-			a2[x]=board[(half)-(x+1)][half+(x+1)];
+		for(x=0;x<(half+1);x++){
+			a2[x]=board[half-(x)][half+(x)];
 		}
 		//put lower part of y in an array
 		for(x=0;x<(half+1);x++){
@@ -186,38 +183,16 @@ bool isSudokuY(int **board, int board_size){
 		}
 
 		//check if numbers are repeating
-		int *count = (int *)calloc(sizeof(int), (board_size - 2));
-		int *count2 = (int *)calloc(sizeof(int), (board_size - 2));
-		
-		//concat
-		int* total1 = malloc(board_size * sizeof(int));
-		int* total2 = malloc(board_size * sizeof(int));
-
-		memcpy(total1,a1,(half)*sizeof(int));
-		memcpy(total1 + half,b3,(half+1)*sizeof(int));	
-
-		memcpy(total2,a2,(half)*sizeof(int));
-		memcpy(total2 + half,b3,(half+1)*sizeof(int));	
-
-	
-		for(x=0;x<board_size;x++){ 
-			if(count[total1[x]] == 1){
+		int *count = (int *)calloc(sizeof(int), (half - 2));
+		for(x=0;x<half;x++){ 
+			if(count[a1[x]] == 1||count[a2[x]]==1 || count[b3[x]]==1){
 				return false;
-			}else{
-				count[total1[x]]++;
 			}
-		}
-
-		for(x=0;x<board_size;x++){ 
-			if(count2[total2[x]] == 1){
-				return false;
-			}else{
-				count2[total2[x]]++;
-			}
-		}
+		} 
 		return true;
-	}
 
+	}
+	
 }
 bool isSudokuXY(int **board, int board_size){
 	if(isSudokuX(board,board_size)==true && isSudokuY(board,board_size)==true){
@@ -268,17 +243,13 @@ void push(NODE **head, int row, int col, int num){
 		//Points the pointer to NULL to avoid dangling
 		(*head)->next = NULL;
 	}else{
-		//Traverses the linked list to find the tail
 		NODE *newnode = (NODE *) malloc(sizeof(NODE));
 		newnode->row = row;
 		newnode->col = col;
 		newnode->val = num;
 
-		// Connects the new node to the tail of the linked list
-		// viewer->next = newnode;
-		//Points the pointer to NULL to avoid dangling
 		newnode->next = viewer;
-    *head = newnode;
+   		*head = newnode;
 	}
 }
 
@@ -305,9 +276,9 @@ void printStacks(NODE **stacks, int stack_row_size){
 }
 
 void populate(int **board, NODE **stacks, int stack_row_size){
-	NODE *viewer;
+	NODE *viewer;    
 
-	// Populate the board using the Top of Stacks
+	// Populate the board using the Top of Stacks 
 	for(int l=0; l<stack_row_size; l++){
 		viewer = stacks[l];
 		if(viewer!=NULL){
@@ -322,7 +293,7 @@ void populate(int **board, NODE **stacks, int stack_row_size){
 }
 
 int backtrack(int **board, NODE **stacks, int stack_row_size, int board_size){
-	// Populate the board using the Top of Stacks
+	// Populate the board using the Top of Stacks 
 	int l=0;
 	for(l=stack_row_size-1; l>=0; l--){
 		if(stacks[l]->next != NULL){
@@ -332,11 +303,77 @@ int backtrack(int **board, NODE **stacks, int stack_row_size, int board_size){
 		}else if(stacks[l]->next == NULL){
 			board[stacks[l]->row][stacks[l]->col] = 0;
 			// printf("popping head %d\n", stacks[l]->val);
-			pop(&stacks[l]);
+			pop(&stacks[l]);    
 		}
-		if(stacks[l] != NULL) break; //Checks if there's a next value after popping
+		if(stacks[l] != NULL) break; //Checks if there's a next value after popping	
 	}
 	// printBoard(board, board_size); // Print the board
 	return l; //return the index of last popped number
+}
+
+ANSWERS solve(int **board, int board_size, int subgrid_size, NODE **stacks, int stack_row_size){
+	int stack_row=0; 
+	int safe=0; // Checker if there is a safe number detected
+	int l=-1, i, j; // Iterators
+	int count_sudoku=0, count_sudokuX=0, count_sudokuY=0, count_sudokuXY=0;
+
+	ANSWERS counters;
+
+	do{
+		stack_row=l+1;
+		for(i=0; i<board_size; i++){
+			for(j=0; j<board_size; j++){
+				if(board[i][j] == BLANK){
+					for(int num=board_size; num>0; num--){
+						if(isSafe(board, board_size, subgrid_size, i, j, num)){
+							// Push to stack 
+							// printf("pushing %d to stack %d, i: %d, j: %d\n", num, stack_row+1, i,j);
+							push(&stacks[stack_row], i, j, num);
+							// printBoard(board, board_size); // Print the board
+							// printStacks(stacks, stack_row_size);
+							safe++;
+						}
+					}
+					populate(board, stacks, stack_row_size); // Populate the board using Tops of Stacks
+					if(safe == 0){
+						// printf("No safe numbers found!\n");
+						// printf("premature backtrack\n");
+						stack_row = backtrack(board, stacks, stack_row, board_size);
+						// printStacks(stacks, stack_row_size);
+						
+						if(stack_row >= 0 && stack_row <= stack_row_size){
+							i = stacks[stack_row]->row;
+							j = stacks[stack_row]->col;  
+						}else{
+							counters.sudoku = count_sudoku;
+							counters.sudokuX = count_sudokuX;
+							counters.sudokuY = count_sudokuY;
+							counters.sudokuXY = count_sudokuXY;
+							return counters;    
+						}
+					} 
+					safe=0;
+					stack_row++;
+				}
+			}
+		}
+		count_sudoku++; // Solution Found! Increment counter!
+		printf("\nSolution %d Found!\n", count_sudoku);
+
+		if(isSudokuX(board, board_size) == true) count_sudokuX++;
+		if(isSudokuY(board, board_size) == true) count_sudokuY++;
+		if(isSudokuXY(board, board_size) == true) count_sudokuXY++;
+
+		counters.sudoku = count_sudoku;
+		counters.sudokuX = count_sudokuX;
+		counters.sudokuY = count_sudokuY;
+		counters.sudokuXY = count_sudokuXY;
+
+		printBoard(board, board_size); // Print the board
+		// printStacks(stacks, stack_row_size);
+		l = backtrack(board, stacks, stack_row_size, board_size);
+	}while(stacks[0]!=NULL);	
+
+	return counters;
 }
 // ---------------------------------------------------------------------------------- //
