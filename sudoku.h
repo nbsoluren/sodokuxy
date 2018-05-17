@@ -11,6 +11,13 @@ typedef struct node{
     int val;
 	struct node *next;
 }NODE;
+
+typedef struct answers{
+	int sudoku;
+	int sudokuX;
+	int sudokuY;
+	int sudokuXY;
+}ANSWERS;
 // ---------------------------------------------------------------------------------- //
 
 
@@ -46,6 +53,60 @@ void destroy_node(NODE **head){
 			destroy_node(head);
 		}
 	}
+}
+//checks if it has given duplicate values in all rows
+bool isDupeRow(int **board, int board_size ){
+	int x, r, a[board_size];
+	for(x=0;x<board_size;x++){//traverse columns
+		for(r=0;r<board_size;r++){
+			//put in an array
+			a[r]=board[r][x];
+		}
+		//check if there are repeated values
+		int *count = (int *)calloc(sizeof(int), (board_size - 2));
+		for(int i=0;i<board_size;i++){
+			if(a[i] !=0){
+				if(count[a[i]] == 1){
+					return true;
+				}else{
+					count[a[1]]++;
+				}
+			} 
+			
+		} 
+	}
+	return false;
+}
+//checks if it has given duplicate values in all columns
+bool isDupeCol(int **board, int board_size ){
+	int x, r, a[board_size];
+	for(x=0;x<board_size;x++){//traverse rows
+		for(r=0;r<board_size;r++){
+			//put in an array
+			a[r]=board[x][r];
+		}
+		//check if there are repeated values
+		int *count = (int *)calloc(sizeof(int), (board_size - 2));
+		for(int i=0;i<board_size;i++){
+			if(a[i] !=0){
+				if(count[a[i]] == 1){
+					return true;
+				}else{
+					count[a[1]]++;
+				}
+			} 
+			
+		} 
+	}
+	return false;	
+}
+
+
+//check if unsolvable due to duplicate values in row, column
+bool hasDupes(int **board, int board_size ,int subgrid_size){
+	if(isDupeRow(board,board_size)==true && isDupeCol(board, board_size)==true){
+		return true;
+	}return false;
 }
 
 // Checks if number is already used in the row
@@ -172,7 +233,7 @@ void pop(NODE **head){
 void push(NODE **head, int row, int col, int num){
 	// Variable Declaration
 	NODE *viewer = *head;
-	
+
 	if(*head == NULL){ //Checks if the list is empty
 		*head = (NODE *) malloc(sizeof(NODE));
 		(*head)->row = row;
@@ -182,17 +243,13 @@ void push(NODE **head, int row, int col, int num){
 		//Points the pointer to NULL to avoid dangling
 		(*head)->next = NULL;
 	}else{
-		//Traverses the linked list to find the tail
-		while(viewer->next!=NULL) viewer=viewer->next;
 		NODE *newnode = (NODE *) malloc(sizeof(NODE));
 		newnode->row = row;
 		newnode->col = col;
 		newnode->val = num;
 
-		//Connects the new node to the tail of the linked list
-		viewer->next = newnode;
-		//Points the pointer to NULL to avoid dangling
-		newnode->next = NULL;
+		newnode->next = viewer;
+   		*head = newnode;
 	}
 }
 
@@ -252,5 +309,62 @@ int backtrack(int **board, NODE **stacks, int stack_row_size, int board_size){
 	}
 	// printBoard(board, board_size); // Print the board
 	return l; //return the index of last popped number
+}
+
+ANSWERS solve(int **board, int board_size, int subgrid_size, NODE **stacks, int stack_row_size){
+	int stack_row=0; 
+	int safe=0; // Checker if there is a safe number detected
+	int l=-1, i, j; // Iterators
+	ANSWERS counters;
+	counters.sudoku=0, counters.sudokuX=0, counters.sudokuY=0, counters.sudokuXY=0;
+
+
+	do{
+		stack_row=l+1;
+		for(i=0; i<board_size; i++){
+			for(j=0; j<board_size; j++){
+				if(board[i][j] == BLANK){
+					for(int num=board_size; num>0; num--){
+						if(isSafe(board, board_size, subgrid_size, i, j, num)){
+							// Push to stack 
+							// printf("pushing %d to stack %d, i: %d, j: %d\n", num, stack_row+1, i,j);
+							push(&stacks[stack_row], i, j, num);
+							// printBoard(board, board_size); // Print the board
+							// printStacks(stacks, stack_row_size);
+							safe++;
+						}
+					}
+					populate(board, stacks, stack_row_size); // Populate the board using Tops of Stacks
+					if(safe == 0){
+						// printf("No safe numbers found!\n");
+						// printf("premature backtrack\n");
+						stack_row = backtrack(board, stacks, stack_row, board_size);
+						// printStacks(stacks, stack_row_size);
+						
+						if(stack_row >= 0 && stack_row <= stack_row_size){
+							i = stacks[stack_row]->row;
+							j = stacks[stack_row]->col;  
+						}else{
+							return counters;    
+						}
+					} 
+					safe=0;
+					stack_row++;
+				}
+			}
+		}
+		counters.sudoku++; // Solution Found! Increment counter!
+		printf("\nSolution %d Found!\n", counters.sudoku);
+
+		if(isSudokuX(board, board_size) == true) counters.sudokuX++;
+		if(isSudokuY(board, board_size) == true) counters.sudokuY++;
+		if(isSudokuXY(board, board_size) == true) counters.sudokuXY++;
+
+		printBoard(board, board_size); // Print the board
+		// printStacks(stacks, stack_row_size);
+		l = backtrack(board, stacks, stack_row_size, board_size);
+	}while(stacks[0]!=NULL);	
+
+	return counters;
 }
 // ---------------------------------------------------------------------------------- //
