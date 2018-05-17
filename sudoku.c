@@ -99,7 +99,7 @@ int main(){
     
     printf("\nNumber of Solutions for all Test Cases:\n");
     for(i=0; i<answer_iter; i++){
-        printf("Board: %d Sudoku: %d SudokuX: %d SudokuY: %d SudokuXY: %d\n", i+1, answers[i].sudoku, answers[i].sudokuX, answers[i].sudokuY, answers[i].sudokuXY);
+        printf("\nBoard: %d \nSudoku: %d \nSudokuX: %d \nSudokuY: %d \nSudokuXY: %d\n", i+1, answers[i].sudoku, answers[i].sudokuX, answers[i].sudokuY, answers[i].sudokuXY);
     }
     return 0;
 }
