@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include "sudoku.h"
 // ---------------------------------------------------------------------------------- //
 
@@ -122,14 +123,15 @@ int main(){
                 continue;
             }
             count_sudoku++; // Solution Found! Increment counter!
-            printf("\nSolution %d Found!\n", count_sudoku);
-            printBoard(board, board_size); // Print the board
+            // printf("\nSolution %d Found!\n", count_sudoku);
+            // printBoard(board, board_size); // Print the board
             // printStacks(stacks, stack_row_size);
             l = backtrack(board, stacks, stack_row_size, board_size);
         }while(stacks[0]!=NULL);
 
         printf("\nFinished looking for solutions.\n\n");
         destroy_int(board, board_size); // Free the board
+        printf("%d Solutions\n", count_sudoku);
         // printBoard(board, board_size); // Print the board
         // for(i=0; i<stack_row_size; i++) destroy_node(&stacks[i]); // Free the stacks
         num_of_boards--; // Decrementor
