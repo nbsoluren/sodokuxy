@@ -47,6 +47,60 @@ void destroy_node(NODE **head){
 		}
 	}
 }
+//checks if it has given duplicate values in all rows
+bool isDupeRow(int **board, int board_size ){
+	int x, r, a[board_size];
+	for(x=0;x<board_size;x++){//traverse columns
+		for(r=0;r<board_size;r++){
+			//put in an array
+			a[r]=board[r][x];
+		}
+		//check if there are repeated values
+		int *count = (int *)calloc(sizeof(int), (board_size - 2));
+		for(int i=0;i<board_size;i++){
+			if(a[i] !=0){
+				if(count[a[i]] == 1){
+					return true;
+				}else{
+					count[a[1]]++;
+				}
+			} 
+			
+		} 
+	}
+	return false;
+}
+//checks if it has given duplicate values in all columns
+bool isDupeCol(int **board, int board_size ){
+	int x, r, a[board_size];
+	for(x=0;x<board_size;x++){//traverse rows
+		for(r=0;r<board_size;r++){
+			//put in an array
+			a[r]=board[x][r];
+		}
+		//check if there are repeated values
+		int *count = (int *)calloc(sizeof(int), (board_size - 2));
+		for(int i=0;i<board_size;i++){
+			if(a[i] !=0){
+				if(count[a[i]] == 1){
+					return true;
+				}else{
+					count[a[1]]++;
+				}
+			} 
+			
+		} 
+	}
+	return false;	
+}
+
+
+//check if unsolvable due to duplicate values in row, column
+bool hasDupes(int **board, int board_size ,int subgrid_size){
+	if(isDupeRow(board,board_size)==true && isDupeCol(board, board_size)==true){
+		return true;
+	}return false;
+}
 
 // Checks if number is already used in the row
 bool usedInRow(int **board, int board_size, int row, int num){
